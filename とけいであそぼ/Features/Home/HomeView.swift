@@ -47,14 +47,6 @@ struct HomeView: View {
                     
                     // Navigation buttons - minimal and functional
                     VStack(spacing: 12) {
-                        NavigationLink(destination: LearnView()) {
-                            HomeButton(
-                                title: "まなぶ",
-                                subtitle: "とけいの よみかた",
-                                systemImage: "book.fill"
-                            )
-                        }
-                        
                         NavigationLink(destination: SandboxView()) {
                             HomeButton(
                                 title: "あそぶ",
