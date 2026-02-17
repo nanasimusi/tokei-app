@@ -19,7 +19,15 @@ struct AnalogClockView: View {
     
     var body: some View {
         GeometryReader { geo in
-            let size = min(geo.size.width, geo.size.height) * 0.85
+            // Use nearly full width for dramatic, Ive-inspired presence
+            let size = min(geo.size.width, geo.size.height) * 0.95
+            
+            // Proportional hand dimensions
+            let centerDotSize = size * 0.04
+            let hourHandWidth = size * 0.02
+            let minuteHandWidth = size * 0.012
+            let hourHandLength = size * 0.28
+            let minuteHandLength = size * 0.40
             
             ZStack {
                 // Clock face
@@ -29,28 +37,28 @@ struct AnalogClockView: View {
                     showMinuteMarks: config.showMinuteMarks
                 )
                 
-                // Minute hand (if shown)
+                // Minute hand (if shown) - elegant and precise
                 if config.showMinuteHand {
                     ClockHandView(
-                        length: size * 0.38,
-                        width: 2.5,
-                        color: .tokeiMinute,
+                        length: minuteHandLength,
+                        width: minuteHandWidth,
+                        color: .tokeiInkPrimary,
                         angle: currentMinuteAngle
                     )
                 }
                 
-                // Hour hand
+                // Hour hand - bold and confident
                 ClockHandView(
-                    length: size * 0.26,
-                    width: 4,
-                    color: .tokeiHour,
+                    length: hourHandLength,
+                    width: hourHandWidth,
+                    color: .tokeiInkPrimary,
                     angle: currentHourAngle
                 )
                 
-                // Center dot
+                // Center dot - the focal point
                 Circle()
                     .fill(Color.tokeiInkPrimary)
-                    .frame(width: 10, height: 10)
+                    .frame(width: centerDotSize, height: centerDotSize)
                 
                 // Interactive drag area
                 if isInteractive {

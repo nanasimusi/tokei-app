@@ -14,11 +14,9 @@ struct HomeView: View {
     
     var body: some View {
         NavigationStack {
-            VStack(spacing: 40) {
-                Spacer()
-                
-                // Live clock display
-                VStack(spacing: 16) {
+            GeometryReader { geo in
+                VStack(spacing: 0) {
+                    // Clock dominates the view - Ive-inspired visual hierarchy
                     AnalogClockView(
                         time: currentTime,
                         config: LevelConfig(
@@ -35,46 +33,48 @@ struct HomeView: View {
                         isDragging: $isDragging,
                         isInteractive: false
                     )
-                    .frame(height: 280)
+                    .frame(height: geo.size.height * 0.50)
+                    .padding(.top, 20)
                     
+                    // Digital time - understated elegance
                     Text(currentTime.displayString)
-                        .font(.system(size: 48, weight: .light, design: .rounded))
+                        .font(.system(size: geo.size.width * 0.12, weight: .light, design: .rounded))
                         .foregroundColor(.tokeiInkPrimary)
                         .monospacedDigit()
-                }
-                
-                Spacer()
-                
-                // Navigation buttons
-                VStack(spacing: 16) {
-                    NavigationLink(destination: LearnView()) {
-                        HomeButton(
-                            title: "まなぶ",
-                            subtitle: "とけいの よみかた",
-                            systemImage: "book.fill"
-                        )
-                    }
+                        .padding(.top, 8)
                     
-                    NavigationLink(destination: SandboxView()) {
-                        HomeButton(
-                            title: "あそぶ",
-                            subtitle: "じゆうに うごかそう",
-                            systemImage: "hand.draw.fill"
-                        )
-                    }
+                    Spacer()
                     
-                    NavigationLink(destination: SettingsView()) {
-                        HomeButton(
-                            title: "せってい",
-                            subtitle: "",
-                            systemImage: "gearshape.fill",
-                            isCompact: true
-                        )
+                    // Navigation buttons - minimal and functional
+                    VStack(spacing: 12) {
+                        NavigationLink(destination: LearnView()) {
+                            HomeButton(
+                                title: "まなぶ",
+                                subtitle: "とけいの よみかた",
+                                systemImage: "book.fill"
+                            )
+                        }
+                        
+                        NavigationLink(destination: SandboxView()) {
+                            HomeButton(
+                                title: "あそぶ",
+                                subtitle: "じゆうに うごかそう",
+                                systemImage: "hand.draw.fill"
+                            )
+                        }
+                        
+                        NavigationLink(destination: SettingsView()) {
+                            HomeButton(
+                                title: "せってい",
+                                subtitle: "",
+                                systemImage: "gearshape.fill",
+                                isCompact: true
+                            )
+                        }
                     }
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 24)
                 }
-                .padding(.horizontal, 24)
-                
-                Spacer()
             }
             .background(Color.tokeiCanvas)
             .onReceive(timer) { _ in

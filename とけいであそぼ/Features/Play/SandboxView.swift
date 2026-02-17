@@ -27,67 +27,69 @@ struct SandboxView: View {
     }
     
     var body: some View {
-        VStack(spacing: 32) {
-            Spacer()
-            
-            // Interactive clock
-            AnalogClockView(
-                time: currentTime,
-                config: sandboxConfig,
-                isDragging: $isDragging,
-                onTimeChanged: { newTime in
-                    currentTime = newTime
-                }
-            )
-            .frame(height: 300)
-            
-            // Time displays with speech button
-            VStack(spacing: 8) {
-                // Digital time
-                if showDigital {
-                    Text(currentTime.displayString)
-                        .font(.system(size: 56, weight: .light, design: .rounded))
-                        .foregroundColor(.tokeiInkPrimary)
-                        .monospacedDigit()
-                }
+        GeometryReader { geo in
+            VStack(spacing: 0) {
+                // Clock takes dominant space - Ive-inspired presence
+                AnalogClockView(
+                    time: currentTime,
+                    config: sandboxConfig,
+                    isDragging: $isDragging,
+                    onTimeChanged: { newTime in
+                        currentTime = newTime
+                    }
+                )
+                .frame(height: geo.size.height * 0.55)
+                .padding(.top, 8)
                 
-                // Japanese reading with speaker button
-                HStack(spacing: 12) {
-                    Text(currentTime.japaneseReading)
-                        .font(.system(size: 24, weight: .medium, design: .rounded))
-                        .foregroundColor(.tokeiInkSecondary)
+                // Time display - clean and confident
+                VStack(spacing: 6) {
+                    if showDigital {
+                        Text(currentTime.displayString)
+                            .font(.system(size: geo.size.width * 0.14, weight: .light, design: .rounded))
+                            .foregroundColor(.tokeiInkPrimary)
+                            .monospacedDigit()
+                    }
                     
-                    Button(action: {
-                        SpeechService.shared.speakTime(currentTime)
-                    }) {
-                        Image(systemName: "speaker.wave.2.fill")
-                            .font(.system(size: 24))
-                            .foregroundColor(.tokeiAccent)
+                    // Japanese reading with speaker
+                    HStack(spacing: 16) {
+                        Text(currentTime.japaneseReading)
+                            .font(.system(size: geo.size.width * 0.06, weight: .medium, design: .rounded))
+                            .foregroundColor(.tokeiInkSecondary)
+                        
+                        Button(action: {
+                            SpeechService.shared.speakTime(currentTime)
+                        }) {
+                            Image(systemName: "speaker.wave.2.fill")
+                                .font(.system(size: geo.size.width * 0.06))
+                                .foregroundColor(.tokeiAccent)
+                        }
                     }
                 }
-            }
-            
-            Spacer()
-            
-            // Quick time buttons
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
-                    QuickTimeButton(hour: 7, minute: 0, label: "あさ") { setTime($0, $1) }
-                    QuickTimeButton(hour: 12, minute: 0, label: "おひる") { setTime($0, $1) }
-                    QuickTimeButton(hour: 3, minute: 0, label: "おやつ") { setTime($0, $1) }
-                    QuickTimeButton(hour: 6, minute: 30, label: "ゆうがた") { setTime($0, $1) }
-                    QuickTimeButton(hour: 9, minute: 0, label: "よる") { setTime($0, $1) }
+                .padding(.vertical, 16)
+                
+                Spacer()
+                
+                // Quick time buttons
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 12) {
+                        QuickTimeButton(hour: 7, minute: 0, label: "あさ") { setTime($0, $1) }
+                        QuickTimeButton(hour: 12, minute: 0, label: "おひる") { setTime($0, $1) }
+                        QuickTimeButton(hour: 3, minute: 0, label: "おやつ") { setTime($0, $1) }
+                        QuickTimeButton(hour: 6, minute: 30, label: "ゆうがた") { setTime($0, $1) }
+                        QuickTimeButton(hour: 9, minute: 0, label: "よる") { setTime($0, $1) }
+                    }
+                    .padding(.horizontal, 24)
                 }
-                .padding(.horizontal, 24)
+                
+                // Display toggles
+                HStack(spacing: 16) {
+                    ToggleChip(label: "デジタル", isOn: $showDigital)
+                    ToggleChip(label: "すうじ", isOn: $showAllNumbers)
+                    ToggleChip(label: "めもり", isOn: $showMinuteMarks)
+                }
+                .padding(.vertical, 16)
+                .padding(.bottom, 8)
             }
-            
-            // Display toggles
-            HStack(spacing: 20) {
-                ToggleChip(label: "デジタル", isOn: $showDigital)
-                ToggleChip(label: "すうじ", isOn: $showAllNumbers)
-                ToggleChip(label: "めもり", isOn: $showMinuteMarks)
-            }
-            .padding(.bottom, 24)
         }
         .background(Color.tokeiCanvas)
         .navigationTitle("あそぶ")
