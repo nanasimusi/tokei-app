@@ -28,35 +28,22 @@ struct ClockFaceView: View {
             Circle()
                 .stroke(Color.tokeiSubtle, lineWidth: 2)
             
-            // Minute marks (60 small dots)
-            if showMinuteMarks {
-                ForEach(0..<60, id: \.self) { minute in
-                    if minute % 5 != 0 {
-                        Circle()
-                            .fill(Color.tokeiSubtle)
-                            .frame(width: 2, height: 2)
-                            .offset(y: -radius + 15)
-                            .rotationEffect(.degrees(Double(minute) * 6))
-                    }
-                }
-            }
-            
-            // Hour marks (12 lines or dots)
-            ForEach(0..<12, id: \.self) { hour in
-                if showMinuteMarks {
-                    // Line marks for detailed view
+            // All 60 minute marks
+            ForEach(0..<60, id: \.self) { minute in
+                if minute % 5 == 0 {
+                    // Hour marks (longer lines at 5-minute intervals)
                     RoundedRectangle(cornerRadius: 1)
-                        .fill(Color.tokeiInkSecondary)
-                        .frame(width: 2, height: 8)
-                        .offset(y: -radius + 12)
-                        .rotationEffect(.degrees(Double(hour) * 30))
+                        .fill(Color.tokeiInkPrimary)
+                        .frame(width: 2, height: 12)
+                        .offset(y: -radius + 10)
+                        .rotationEffect(.degrees(Double(minute) * 6))
                 } else {
-                    // Dot marks for simple view
-                    Circle()
+                    // Minute marks (small lines for each minute)
+                    RoundedRectangle(cornerRadius: 0.5)
                         .fill(Color.tokeiSubtle)
-                        .frame(width: 4, height: 4)
-                        .offset(y: -radius + 20)
-                        .rotationEffect(.degrees(Double(hour) * 30))
+                        .frame(width: 1, height: 6)
+                        .offset(y: -radius + 10)
+                        .rotationEffect(.degrees(Double(minute) * 6))
                 }
             }
             

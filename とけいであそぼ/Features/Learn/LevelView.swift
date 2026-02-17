@@ -263,7 +263,14 @@ struct ResultOverlay: View {
                 opacity = 1
             }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
+            // Speak result
+            if isCorrect {
+                SpeechService.shared.speakCorrect()
+            } else {
+                SpeechService.shared.speakTryAgain()
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                 dismiss()
             }
         }

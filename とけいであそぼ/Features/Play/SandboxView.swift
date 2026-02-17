@@ -41,7 +41,7 @@ struct SandboxView: View {
             )
             .frame(height: 300)
             
-            // Time displays
+            // Time displays with speech button
             VStack(spacing: 8) {
                 // Digital time
                 if showDigital {
@@ -51,10 +51,20 @@ struct SandboxView: View {
                         .monospacedDigit()
                 }
                 
-                // Japanese reading
-                Text(currentTime.japaneseReading)
-                    .font(.system(size: 24, weight: .medium, design: .rounded))
-                    .foregroundColor(.tokeiInkSecondary)
+                // Japanese reading with speaker button
+                HStack(spacing: 12) {
+                    Text(currentTime.japaneseReading)
+                        .font(.system(size: 24, weight: .medium, design: .rounded))
+                        .foregroundColor(.tokeiInkSecondary)
+                    
+                    Button(action: {
+                        SpeechService.shared.speakTime(currentTime)
+                    }) {
+                        Image(systemName: "speaker.wave.2.fill")
+                            .font(.system(size: 24))
+                            .foregroundColor(.tokeiAccent)
+                    }
+                }
             }
             
             Spacer()
